@@ -78,3 +78,34 @@ Frontend runs on `http://localhost:5173` (Vite default)
 4. Generate a tailored cover letter for a selected job
 
 Create a `.env` file in `careerpilot-backend/`:
+
+
+## Architecture
+
+┌───────────────────┐         ┌────────────────────┐         ┌──────────────────┐
+│                    │  HTTP   │                     │  HTTPS  │                  │
+│   React Frontend   │ ──────> │   Express Backend   │ ──────> │    Groq API      │
+│ (Vite + Tailwind + │ <────── │     (Node.js)       │ <────── │ (llama-3.3-70b-  │
+│     Zustand)       │  JSON   │  localhost:3001     │  JSON   │    versatile)    │
+│  localhost:5173    │         │                     │         │                  │
+└───────────────────┘         └──────────┬──────────┘         └──────────────────┘
+                                          │
+                                          │ reads job listings
+                                          ▼
+                                ┌──────────────────┐
+                                │    jobs.json      │
+                                │ (15 sample jobs)  │
+                                └──────────────────┘
+                                          │
+                                          │ stores applications
+                                          ▼
+                                ┌──────────────────┐
+                                │  In-memory store  │
+                                │  (applications)   │
+                                └──────────────────┘
+
+### Flow
+1. User uploads resume in React frontend → sent to Express backend
+2. Backend extracts text (pdf-parse / mammoth) → sends to Groq → returns structured profile
+3. Profile sent to /match-jobs → backend loops through jobs.json, calls Groq per job → returns ranked, scored matches with explanations
+4. User generates a cover letter (another Groq call) or tracks an application (stored in-memory on the backend)
