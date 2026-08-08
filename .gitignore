@@ -1,0 +1,6 @@
+node_modules/ 
+.env 
+dist/ 
+"*.zip" 
+"resumee.pdf" 
+"HackTheStack_2026_Official_Problem_Statements_and_Rules.pdf" 

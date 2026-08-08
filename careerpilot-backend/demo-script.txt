@@ -1,0 +1,15 @@
+1. Show job dataset loaded:
+curl http://localhost:3001/jobs
+
+2. Upload resume → structured profile (the core "AI understands resume" proof):
+curl -X POST http://localhost:3001/upload-resume -F "resume=@D:\stackcode\resumee.pdf"
+
+3. Match against all 15 jobs with explainable scoring (the core AI feature):
+curl -X POST http://localhost:3001/match-jobs -H "Content-Type: application/json" -d "{...paste profile from step 2...}"
+
+4. Generate cover letter for top match:
+curl -X POST http://localhost:3001/generate-cover-letter -H "Content-Type: application/json" -d "{...profile..., \"jobId\": \"fe-002\"}"
+
+5. Track application through stages:
+curl -X POST http://localhost:3001/applications -H "Content-Type: application/json" -d "{...}"
+curl -X PATCH http://localhost:3001/applications/<id> -H "Content-Type: application/json" -d "{\"stage\":\"Interview\"}"
